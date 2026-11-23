@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CampusHub – Student Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5fb;--card:#fff;--tx:#1b1f33;--mu:#5f6682;--bd:#e3e7f3;--acc:#4338ca;--acc2:#0f766e;--soft:#eef0ff;--warn:#be123c;--ok:#15803d;--sh:0 1px 3px rgba(27,31,51,.06),0 8px 24px rgba(27,31,51,.05)}
+[data-theme=dark]{--bg:#0e1120;--card:#171b2f;--tx:#eef0fb;--mu:#a2a8c6;--bd:#272c48;--acc:#8b93ff;--acc2:#2dd4bf;--soft:#232853;--warn:#fb7185;--ok:#4ade80;--sh:0 1px 3px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.5 "DM Sans",system-ui,sans-serif;background:var(--bg);color:var(--tx);transition:background .3s,color .3s}
+h1,h2,h3{font-family:"Bricolage Grotesque","DM Sans",sans-serif;letter-spacing:-.01em}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:2px;border-radius:8px}
+.mu{color:var(--mu)}
+.app{display:flex;min-height:100vh}
+.side{width:230px;flex:none;background:var(--card);border-right:1px solid var(--bd);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:18px}
+.brand{font:700 20px "Bricolage Grotesque";padding:0 10px;display:flex;gap:8px;align-items:center}
+.brand i{background:var(--acc);color:#fff;border-radius:10px;width:32px;height:32px;display:grid;place-items:center;font-style:normal}
+#nav{display:flex;flex-direction:column;gap:4px}
+#nav button{display:flex;gap:12px;align-items:center;background:none;border:0;padding:10px 12px;border-radius:12px;color:var(--mu);font-weight:500;text-align:left;transition:.2s}
+#nav button:hover{background:var(--soft);color:var(--tx)}
+#nav button[aria-current=page]{background:var(--acc);color:#fff}
+[data-theme=dark] #nav button[aria-current=page]{color:#0e1120}
+.main{flex:1;min-width:0}
+.top{position:sticky;top:0;z-index:20;display:flex;gap:12px;align-items:center;padding:12px 28px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+.sw{position:relative;flex:1;max-width:420px}
+.sw input{width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--card)}
+#sr{position:absolute;top:46px;left:0;right:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--sh);max-height:320px;overflow:auto;display:none}
+#sr button{display:block;width:100%;text-align:left;background:none;border:0;padding:10px 14px}
+#sr button:hover,#sr button:focus-visible{background:var(--soft)}
+.sp{flex:1}
+.ib{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:12px;width:42px;height:42px;font-size:18px}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--warn);color:#fff;font:700 11px "DM Sans";min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px}
+[data-theme=dark] .badge{color:#0e1120}
+.me{display:flex;gap:10px;align-items:center;background:none;border:0;padding:4px 8px;border-radius:12px;font-weight:700}
+.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:grid;place-items:center;font:700 15px "Bricolage Grotesque";flex:none}
+[data-theme=dark] .av{color:#0e1120}
+#view{padding:26px 28px 40px;max-width:1280px}
+#view>h1{font-size:30px}
+.sub{margin:2px 0 20px;color:var(--mu)}
+.grid{display:grid;gap:18px;margin-bottom:18px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px;box-shadow:var(--sh);min-width:0}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ch h3{font-size:17px}
+.stat b{display:block;font:700 30px "Bricolage Grotesque";line-height:1.1}
+.stat span{color:var(--mu);font-size:13px}
+.stat.hot b{color:var(--warn)}
+.chip{display:inline-flex;gap:6px;align-items:center;background:var(--soft);color:var(--acc);padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700;border:0}
+.chip.t{background:color-mix(in srgb,var(--acc2) 15%,transparent);color:var(--acc2)}
+.link{background:none;border:0;color:var(--acc);font-weight:700;padding:0}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:8px 14px;font-weight:700;transition:.2s}
+[data-theme=dark] .btn{color:#0e1120}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.o{background:none;color:var(--acc);border:1px solid var(--bd)}
+.prof{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.prof .av{width:76px;height:76px;font-size:28px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 20px;margin-top:16px}
+.kv div{font-size:14px}.kv small{display:block;color:var(--mu);font-size:12px}
+.ringw{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring text{font:700 26px "Bricolage Grotesque";fill:var(--tx)}
+.bar{height:9px;background:var(--soft);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px;background:var(--acc2);transition:width .6s}
+.bar.w i{background:var(--warn)}
+.ar{margin-bottom:14px}.ar .r{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:500;margin-bottom:5px}
+.wn{color:var(--warn);font-size:13px;font-weight:700;margin-top:4px}.okk{color:var(--ok);font-size:13px;margin-top:4px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;font-size:13px}
+.cal b{color:var(--mu);font-size:12px}
+.cal span{padding:8px 0;border-radius:9px;background:var(--soft)}
+.cal .p{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok);font-weight:700}
+.cal .a{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn);font-weight:700}
+.cal .o,.cal .f{background:none;color:var(--mu)}
+.cal .td{outline:2px solid var(--acc);outline-offset:-2px}
+.lg{display:flex;gap:14px;font-size:12px;color:var(--mu);margin-top:12px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+th{color:var(--mu);font-size:12px;font-weight:700}
+td.n,th.n{text-align:center}
+.gr{font-weight:700;color:var(--acc)}
+select{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px}
+.tt th,.tt td{text-align:center;border:1px solid var(--bd);padding:6px;min-width:96px}
+.tt th.td,.tt td.td{background:var(--soft)}
+.tt th.td{color:var(--acc)}
+.cl{display:block;border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 16%,transparent);border-radius:8px;padding:6px 8px;text-align:left;font-size:13px;font-weight:700}
+.cl small{display:block;font-weight:400;color:var(--mu)}
+.cl.now{box-shadow:0 0 0 2px var(--acc2)}
+.lunch{color:var(--mu);font-size:12px;letter-spacing:.2em}
+.next{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-radius:18px;padding:22px}
+[data-theme=dark] .next{color:#0e1120}
+.next h2{font-size:26px;margin:4px 0}
+.next .cd{font:700 34px "Bricolage Grotesque";margin-top:10px}
+.sc{border-top:5px solid var(--c)}
+.sc h3{margin-bottom:2px}
+.nl{list-style:none;padding:0;display:grid;gap:10px}
+.nt{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--bd);border-radius:14px;width:100%;text-align:left;background:none;transition:.2s}
+.nt:hover{border-color:var(--acc)}
+.nt.u{background:var(--soft);border-left:5px solid var(--acc)}
+.nt .ic{font-size:20px;width:38px;height:38px;display:grid;place-items:center;background:var(--card);border-radius:10px;flex:none}
+.nt b{display:block}.nt small{color:var(--mu)}
+.fl{display:flex;gap:8px;flex-wrap:wrap}
+.fl button{border:1px solid var(--bd);background:var(--card);border-radius:99px;padding:6px 14px;font-weight:500}
+.fl button[aria-pressed=true]{background:var(--acc);color:#fff;border-color:var(--acc)}
+[data-theme=dark] .fl button[aria-pressed=true]{color:#0e1120}
+.an{padding:16px 0;border-bottom:1px solid var(--bd)}.an:last-child{border:0}
+.an h4{font:700 16px "DM Sans";display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.an p{margin:6px 0;color:var(--mu);max-width:70ch}
+.pin{background:var(--warn);color:#fff;font-size:11px;padding:2px 9px;border-radius:99px}
+[data-theme=dark] .pin{color:#0e1120}
+dialog{border:1px solid var(--bd);border-radius:20px;background:var(--card);color:var(--tx);padding:26px;width:min(480px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,12,25,.55)}
+.empty{color:var(--mu);padding:20px;text-align:center}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
+@media(max-width:760px){
+.side{position:fixed;bottom:0;left:0;right:0;top:auto;width:auto;height:auto;flex-direction:row;padding:6px;z-index:30;border-right:0;border-top:1px solid var(--bd)}
+.brand{display:none}
+#nav{flex-direction:row;overflow-x:auto;width:100%;gap:2px}
+#nav button{flex-direction:column;gap:2px;font-size:11px;padding:6px 10px;min-width:64px;align-items:center}
+.top{padding:10px 14px}.me span{display:none}
+#view{padding:18px 14px 100px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side"><div class="brand"><i>🎓</i>CampusHub</div><nav id="nav" aria-label="Main"></nav></aside>
+  <div class="main">
+    <header class="top">
+      <div class="sw"><input id="q" type="search" placeholder="Search subjects, notices, announcements…" aria-label="Search"><div id="sr" role="listbox"></div></div>
+      <div class="sp"></div>
+      <button class="ib" data-act="theme" aria-label="Toggle light and dark mode" id="tb">🌙</button>
+      <button class="ib" data-v="notifications" aria-label="Notifications">🔔<span class="badge" id="bd"></span></button>
+      <button class="me" data-v="profile" aria-label="Open profile"><span class="av" id="av"></span><span id="mn"></span></button>
+    </header>
+    <main id="view" tabindex="-1"></main>
+  </div>
+</div>
+<dialog id="dlg" aria-labelledby="dt"></dialog>
+
+<script>
+/* ============ DATA (BACKEND: replace each with a fetch('/api/...') call) ============ */
+const STUDENT={name:"Aarav Reddy",roll:"23CS1042",dept:"Computer Science & Engineering",year:"2nd Year · Semester 3",email:"aarav.reddy@campus.edu",phone:"+91 98765 43210",mentor:"Dr. Meena Rao",batch:"2023–2027",sem:3};
+const SUBJECTS=[
+{c:"CS301",n:"Data Structures",cr:4,f:"Dr. Meena Rao",col:"#4338ca",p:72,a:[34,38],room:"LH-204",d:"Arrays, linked lists, trees, graphs, hashing and complexity analysis.",t:["Trees & BST","Graph traversal","Hashing","Heaps"]},
+{c:"CS302",n:"Database Systems",cr:4,f:"Prof. Karthik Iyer",col:"#0f766e",p:65,a:[30,36],room:"LH-108",d:"Relational model, SQL, normalization, transactions and indexing.",t:["ER modelling","SQL joins","Normal forms","Transactions"]},
+{c:"CS303",n:"Operating Systems",cr:3,f:"Dr. Sunita Verma",col:"#c2410c",p:58,a:[24,35],room:"LH-210",d:"Processes, scheduling, memory management, file systems and deadlocks.",t:["Scheduling","Paging","Deadlocks","File systems"]},
+{c:"MA301",n:"Discrete Mathematics",cr:3,f:"Prof. R. Nagesh",col:"#a21caf",p:80,a:[28,34],room:"LH-102",d:"Logic, sets, relations, graph theory and combinatorics.",t:["Propositional logic","Relations","Graph theory","Counting"]},
+{c:"CS304",n:"Computer Networks",cr:3,f:"Dr. Alok Mehta",col:"#1d4ed8",p:60,a:[22,32],room:"LH-305",d:"Layered models, TCP/IP, routing, congestion control and network security.",t:["OSI & TCP/IP","Routing","Transport layer","Security"]},
+{c:"HS301",n:"Professional Communication",cr:2,f:"Ms. Priya Nair",col:"#b45309",p:85,a:[17,20],room:"SH-12",d:"Technical writing, presentations, interviews and teamwork.",t:["Report writing","Presentations","Group discussion","Interviews"]}];
+const MARKS={3:[["CS301",[18,17,9,44]],["CS302",[16,18,8,40]],["CS303",[14,15,7,33]],["MA301",[17,15,9,38]],["CS304",[13,16,8,36]],["HS301",[18,19,10,42]]],
+2:[["PY201","Python Programming",4,[19,18,10,46]],["EC201","Digital Logic",3,[15,16,8,38]],["MA201","Calculus",4,[14,13,7,35]],["PH201","Engineering Physics",3,[16,15,9,40]],["ME201","Engineering Graphics",2,[17,18,9,41]]]};
+const H=[9,10,11,12,14,15,16], DAYS=["Mon","Tue","Wed","Thu","Fri","Sat"];
+const TT=[["CS301","CS302","CS303","MA301","CS304","CS301",""],["CS302","CS304","HS301","CS303","CS302","CS302",""],["MA301","CS301","CS304","CS302","CS303","CS303",""],["CS303","MA301","CS301","CS304","HS301","",""],["CS304","CS302","MA301","CS301","CS303","CS304",""],["HS301","CS301","","","","",""]];
+const NOTIFS=[
+{id:1,y:"assignment",t:"DBMS Assignment 3 due tomorrow",b:"Submit the normalization worksheet on the portal by 11:59 PM.",h:2},
+{id:2,y:"exam",t:"Internal 2 timetable released",b:"Exams start next Monday. Check the schedule for room allocation.",h:5},
+{id:3,y:"fee",t:"Semester fee due in 5 days",b:"Pay online to avoid a late fine of ₹500.",h:20},
+{id:4,y:"event",t:"Hackathon registrations open",b:"24-hour campus hackathon. Teams of 2–4 can register until Friday.",h:30},
+{id:5,y:"assignment",t:"Upload Data Structures lab record",b:"Experiments 5 to 8 must be signed and uploaded.",h:48},
+{id:6,y:"exam",t:"Hall tickets available",b:"Download your hall ticket from the exam section.",h:72},
+{id:7,y:"event",t:"Guest lecture: Careers in Cloud",b:"Seminar hall, 3 PM. Open to all second-year students.",h:96},
+{id:8,y:"fee",t:"Library fine cleared",b:"Your pending library dues have been settled.",h:120}];
+const ANNS=[
+{id:1,t:"Mid-semester exams begin next Monday",by:"Controller of Examinations",d:1,pin:1,s:"Internal 2 exams run for six working days.",l:"Internal 2 exams run for six working days. Carry your ID card and hall ticket. Phones and smart watches are not allowed inside the hall. Report 15 minutes before the start time."},
+{id:2,t:"Fee payment deadline extended",by:"Accounts Office",d:2,pin:1,s:"The last date is now the 30th of this month.",l:"The last date to pay the semester fee is now the 30th of this month. Payments after this date include a fine of ₹500. Receipts are available under the Notifications tab."},
+{id:3,t:"Annual Tech Fest: call for volunteers",by:"Student Council",d:4,pin:0,s:"Join the organizing teams for events, design and logistics.",l:"Join the organizing teams for events, design and logistics. Volunteers receive activity points and a participation certificate. Sign up at the Student Council desk."},
+{id:4,t:"New books added to the library",by:"Central Library",d:6,pin:0,s:"Over 200 new titles in computing and mathematics.",l:"Over 200 new titles in computing and mathematics are now available. Students can borrow up to four books for 14 days."},
+{id:5,t:"Placement training schedule",by:"Training & Placement Cell",d:8,pin:0,s:"Aptitude and coding sessions start from next week.",l:"Aptitude and coding sessions start from next week in Lab 3 at 4 PM. Attendance is mandatory for pre-final-year students and open for others."}];
+
+/* ============ HELPERS ============ */
+const $=s=>document.querySelector(s), SUB=c=>SUBJECTS.find(s=>s.c===c);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const S={view:"dashboard",sem:3,filter:"all",open:new Set(),read:new Set(store.get("read",[6,8])),theme:store.get("theme","light")};
+const ICON={assignment:"📝",exam:"📅",fee:"💳",event:"🎉"};
+const VIEWS=[["dashboard","🏠","Dashboard"],["profile","👤","Profile"],["attendance","✅","Attendance"],["marks","📊","Marks"],["timetable","🗓️","Timetable"],["subjects","📚","Subjects"],["notifications","🔔","Notifications"],["announcements","📢","Announcements"]];
+const ago=h=>h<24?h+"h ago":Math.floor(h/24)+"d ago";
+const dago=d=>d===1?"Yesterday":d+" days ago";
+const grade=t=>t>=90?["O",10]:t>=80?["A+",9]:t>=70?["A",8]:t>=60?["B",7]:t>=50?["C",6]:["F",0];
+const pct=(a,t)=>Math.round(a/t*100);
+const semRows=s=>s==3?MARKS[3].map(([c,m])=>({c,n:SUB(c).n,cr:SUB(c).cr,m})):MARKS[2].map(([c,n,cr,m])=>({c,n,cr,m}));
+const total=m=>m.reduce((a,b)=>a+b,0);
+const gpa=rows=>{const cr=rows.reduce((a,r)=>a+r.cr,0);return (rows.reduce((a,r)=>a+r.cr*grade(total(r.m))[1],0)/cr).toFixed(2)};
+const cgpa=()=>gpa([...semRows(3),...semRows(2)]);
+const attAll=()=>pct(SUBJECTS.reduce((a,s)=>a+s.a[0],0),SUBJECTS.reduce((a,s)=>a+s.a[1],0));
+const unread=()=>NOTIFS.filter(n=>!S.read.has(n.id)).length;
+const initials=STUDENT.name.split(" ").map(w=>w[0]).join("");
+const card=(t,b,x="")=>`<section class="card"><div class="ch"><h3>${t}</h3>${x}</div>${b}</section>`;
+const stat=(v,l,hot)=>`<div class="card stat ${hot?"hot":""}"><b>${v}</b><span>${l}</span></div>`;
+
+/* ============ COMPONENTS ============ */
+function profileCard(){return card("Student profile",`<div class="prof"><div class="av" aria-hidden="true">${initials}</div><div><h2>${STUDENT.name}</h2><p class="mu">${STUDENT.dept}</p><p style="margin-top:8px"><span class="chip">CGPA ${cgpa()}</span> <span class="chip t">Sem GPA ${gpa(semRows(3))}</span></p></div></div>
+<div class="kv"><div><small>Roll number</small>${STUDENT.roll}</div><div><small>Year / semester</small>${STUDENT.year}</div><div><small>Email</small>${STUDENT.email}</div><div><small>Phone</small>${STUDENT.phone}</div><div><small>Mentor</small>${STUDENT.mentor}</div><div><small>Batch</small>${STUDENT.batch}</div></div>`)}
+function ring(p){const r=54,c=2*Math.PI*r,w=p<75;return `<svg class="ring" width="150" height="150" viewBox="0 0 150 150" role="img" aria-label="Overall attendance ${p} percent"><circle cx="75" cy="75" r="${r}" fill="none" stroke="var(--soft)" stroke-width="14"/><circle cx="75" cy="75" r="${r}" fill="none" stroke="${w?"var(--warn)":"var(--acc2)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 75 75)"/><text x="75" y="84" text-anchor="middle">${p}%</text></svg>`}
+function lowList(){const low=SUBJECTS.filter(s=>pct(...s.a)<75);return low.length?low.map(s=>`<p class="wn">⚠ ${s.n}: ${need(s)} more classes needed</p>`).join(""):`<p class="okk">All subjects are above 75%.</p>`}
+const need=s=>Math.ceil(3*s.a[1]-4*s.a[0]);
+function attBars(){return SUBJECTS.map(s=>{const p=pct(...s.a),w=p<75;return `<div class="ar"><div class="r"><span>${s.n}</span><span>${s.a[0]}/${s.a[1]} · <b>${p}%</b></span></div><div class="bar ${w?"w":""}" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100" aria-label="${s.n} attendance"><i style="width:${p}%"></i></div>${w?`<div class="wn">⚠ Need ${need(s)} more classes to reach 75%</div>`:`<div class="okk">✓ You can miss ${Math.floor(4*s.a[0]/3-s.a[1])} more classes and stay above 75%</div>`}</div>`}).join("")}
+function calendar(){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();let cells=DAYS.concat("Sun").map(d=>`<b>${d}</b>`).join(""),pr=0,ab=0;
+for(let i=0;i<first;i++)cells+="<span></span>";
+for(let d=1;d<=dim;d++){const wd=new Date(y,m,d).getDay();let c="f";if(d<=n.getDate()){if(wd===0)c="o";else if((d*7+m)%11===0){c="a";ab++}else{c="p";pr++}}cells+=`<span class="${c} ${d===n.getDate()?"td":""}">${d}</span>`}
+return `<p class="mu" style="margin-bottom:10px">${n.toLocaleString("en",{month:"long",year:"numeric"})} · ${pr} present, ${ab} absent</p><div class="cal">${cells}</div><div class="lg"><span>🟩 Present</span><span>🟥 Absent</span><span>⬜ Holiday / upcoming</span></div>`}
+function marksChart(rows){const W=560,Hh=230,bw=Math.min(54,(W-60)/rows.length-14),gap=(W-50)/rows.length;let g="";[0,25,50,75,100].forEach(v=>{const y=200-v*1.7;g+=`<line x1="40" x2="${W}" y1="${y}" y2="${y}" stroke="var(--bd)"/><text x="32" y="${y+4}" text-anchor="end" font-size="11" fill="var(--mu)">${v}</text>`});
+rows.forEach((r,i)=>{const t=total(r.m),x=50+i*gap+(gap-bw)/2,h=t*1.7,col=t>=80?"var(--acc2)":t>=60?"var(--acc)":"var(--warn)";g+=`<rect x="${x}" y="${200-h}" width="${bw}" height="${h}" rx="6" fill="${col}"><title>${r.n}: ${t}/100</title></rect><text x="${x+bw/2}" y="${192-h}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${t}</text><text x="${x+bw/2}" y="220" text-anchor="middle" font-size="11" fill="var(--mu)">${r.c}</text>`});
+return `<svg viewBox="0 0 ${W} ${Hh}" width="100%" role="img" aria-label="Total marks per subject">${g}</svg>`}
+function nextCls(){const n=new Date();for(let o=0;o<8;o++){const d=new Date(n);d.setDate(n.getDate()+o);const di=d.getDay()-1;if(di<0)continue;for(let i=0;i<H.length;i++){const c=TT[di][i];if(!c)continue;const st=new Date(d);st.setHours(H[i],0,0,0);if(st>n)return{c,st,di}}}return null}
+function nextCard(){const x=nextCls();if(!x)return card("Next class",`<p class="empty">No upcoming classes.</p>`);const s=SUB(x.c);return `<section class="next" aria-live="off"><span>Next class</span><h2>${s.n}</h2><p>${DAYS[x.di]}, ${x.st.toLocaleTimeString("en",{hour:"numeric",minute:"2-digit"})} · ${s.room} · ${s.f}</p><div class="cd" data-cd="${x.st.getTime()}">--</div></section>`}
+function cd(ms){let s=Math.max(0,Math.floor(ms/1e3));const d=Math.floor(s/86400);s%=86400;const h=Math.floor(s/3600),m=Math.floor(s%3600/60);s%=60;return (d?d+"d ":"")+h+"h "+m+"m "+s+"s"}
+function notifList(limit){let l=NOTIFS.filter(n=>S.filter==="all"||n.y===S.filter||limit);l=limit?NOTIFS.slice(0,limit):l;return l.length?`<ul class="nl">${l.map(n=>`<li><button class="nt ${S.read.has(n.id)?"":"u"}" data-act="read" data-id="${n.id}" aria-label="${n.t}${S.read.has(n.id)?"":" (unread). Mark as read"}"><span class="ic" aria-hidden="true">${ICON[n.y]}</span><span><b>${n.t}</b><span class="mu">${n.b}</span><br><small>${n.y} · ${ago(n.h)}</small></span></button></li>`).join("")}</ul>`:`<p class="empty">No ${S.filter} notifications.</p>`}
+function annList(limit){const l=[...ANNS].sort((a,b)=>b.pin-a.pin||a.d-b.d).slice(0,limit||99);return l.map(a=>{const o=S.open.has(a.id);return `<article class="an"><h4>${a.pin?`<span class="pin">📌 Pinned</span>`:""}${a.t}</h4><small class="mu">${a.by} · ${dago(a.d)}</small><p>${o?a.l:a.s}</p><button class="link" data-act="more" data-id="${a.id}" aria-expanded="${o}">${o?"Show less":"Read more"}</button></article>`}).join("")}
+function ttGrid(){const now=new Date(),td=now.getDay()-1,hr=now.getHours();let h=`<div class="tw"><table class="tt"><caption class="mu" style="text-align:left;padding-bottom:8px">Today is highlighted. Your current class has a green outline.</caption><thead><tr><th scope="col">Time</th>${DAYS.map((d,i)=>`<th scope="col" class="${i===td?"td":""}">${d}</th>`).join("")}</tr></thead><tbody>`;
+H.forEach((t,i)=>{if(t===14)h+=`<tr><th scope="row">13:00</th><td colspan="6" class="lunch">LUNCH BREAK</td></tr>`;h+=`<tr><th scope="row">${t}:00</th>${DAYS.map((d,di)=>{const c=TT[di][i],s=c&&SUB(c);return `<td class="${di===td?"td":""}">${s?`<span class="cl ${di===td&&hr===t?"now":""}" style="--c:${s.col}">${s.c}<small>${s.n.split(" ")[0]} · ${s.room}</small></span>`:"—"}</td>`}).join("")}</tr>`});return h+"</tbody></table></div>"}
+
+/* ============ VIEWS ============ */
+const first=STUDENT.name.split(" ")[0];
+const V={
+dashboard(){const hr=new Date().getHours(),g=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
+return `<h1>${g}, ${first}</h1><p class="sub">${new Date().toLocaleDateString("en",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</p>
+<div class="stats">${stat(attAll()+"%","Overall attendance",attAll()<75)}${stat(cgpa(),"CGPA")}${stat(gpa(semRows(3)),"Semester 3 GPA")}${stat(unread(),"Unread notifications",unread()>0)}</div>
+<div class="grid g2">${profileCard()}${nextCard()}</div>
+<div class="grid g2">${card("Attendance",`<div class="ringw">${ring(attAll())}<div>${lowList()}</div></div>`,`<button class="link" data-v="attendance">Details</button>`)}${card("Semester 3 marks",marksChart(semRows(3)),`<button class="link" data-v="marks">Details</button>`)}</div>
+<div class="grid g2">${card("Latest notifications",notifList(4),`<button class="link" data-v="notifications">View all</button>`)}${card("Announcements",annList(3),`<button class="link" data-v="announcements">View all</button>`)}</div>`},
+profile(){return `<h1>Profile</h1><p class="sub">Your academic details.</p>${profileCard()}`},
+attendance(){return `<h1>Attendance</h1><p class="sub">Minimum required: 75% in every subject.</p><div class="grid g2">${card("Overall",`<div class="ringw">${ring(attAll())}<div>${lowList()}</div></div>`)}${card("This month",calendar())}</div>${card("Subject-wise attendance",attBars())}`},
+marks(){const rows=semRows(S.sem);return `<h1>Marks &amp; results</h1><p class="sub">Internals, assignments and final exam.</p>
+<div class="grid g2">${card("Summary",`<p><span class="chip">Semester GPA ${gpa(rows)}</span> <span class="chip t">CGPA ${cgpa()}</span></p><p class="mu" style="margin-top:12px">Credits this semester: ${rows.reduce((a,r)=>a+r.cr,0)}</p>`,`<label>Semester <select data-act="sem" aria-label="Select semester"><option value="3" ${S.sem==3?"selected":""}>Semester 3 (current)</option><option value="2" ${S.sem==2?"selected":""}>Semester 2</option></select></label>`)}${card("Total marks by subject",marksChart(rows))}</div>
+${card("Marks table",`<div class="tw"><table><thead><tr><th>Subject</th><th class="n">Credits</th><th class="n">Internal 1 /20</th><th class="n">Internal 2 /20</th><th class="n">Assignment /10</th><th class="n">Final /50</th><th class="n">Total</th><th class="n">Grade</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.n}</td><td class="n">${r.cr}</td>${r.m.map(v=>`<td class="n">${v}</td>`).join("")}<td class="n"><b>${total(r.m)}</b></td><td class="n gr">${grade(total(r.m))[0]}</td></tr>`).join("")}</tbody></table></div>`)}`},
+timetable(){return `<h1>Timetable</h1><p class="sub">Weekly schedule, Monday to Saturday.</p><div class="grid g2" style="grid-template-columns:minmax(0,1fr)">${nextCard()}</div>${card("Weekly timetable",ttGrid())}`},
+subjects(){return `<h1>Subjects</h1><p class="sub">${SUBJECTS.length} subjects · ${SUBJECTS.reduce((a,s)=>a+s.cr,0)} credits this semester.</p><div class="grid g3">${SUBJECTS.map(s=>`<section class="card sc" style="--c:${s.col}"><span class="chip">${s.c}</span><h3 style="margin-top:8px">${s.n}</h3><p class="mu">${s.f} · ${s.cr} credits</p><p style="margin:14px 0 5px;font-size:13px">Syllabus covered: <b>${s.p}%</b></p><div class="bar"><i style="width:${s.p}%;background:${s.col}"></i></div><button class="btn o" style="margin-top:16px" data-act="subj" data-id="${s.c}">View details</button></section>`).join("")}</div>`},
+notifications(){const ty=["all","assignment","exam","fee","event"];return `<h1>Notifications</h1><p class="sub">${unread()} unread</p>${card("Inbox",`<div class="ch"><div class="fl" role="group" aria-label="Filter by type">${ty.map(t=>`<button data-act="filter" data-id="${t}" aria-pressed="${S.filter===t}">${t==="all"?"All":ICON[t]+" "+t[0].toUpperCase()+t.slice(1)}</button>`).join("")}</div><button class="btn" data-act="markall">Mark all as read</button></div>${notifList()}`)}`},
+announcements(){return `<h1>Announcements</h1><p class="sub">Pinned notices appear first.</p>${card("College &amp; department",annList())}`}};
+
+/* ============ RENDER / ROUTING ============ */
+function render(){$("#view").innerHTML=V[S.view]();
+$("#nav").innerHTML=VIEWS.map(([k,i,l])=>`<button data-v="${k}" ${k===S.view?'aria-current="page"':""}><span aria-hidden="true">${i}</span>${l}</button>`).join("");
+const b=$("#bd");b.textContent=unread();b.style.display=unread()?"grid":"none";tick()}
+function go(v){S.view=v;if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);render();window.scrollTo({top:0,behavior:"smooth"});$("#view").focus({preventScroll:true});$("#sr").style.display="none";$("#q").value=""}
+function tick(){document.querySelectorAll("[data-cd]").forEach(e=>e.textContent=cd(+e.dataset.cd-Date.now()))}
+function setTheme(t){S.theme=t;document.documentElement.dataset.theme=t;$("#tb").textContent=t==="dark"?"☀️":"🌙";store.set("theme",t)}
+
+/* ============ EVENTS ============ */
+document.addEventListener("click",e=>{
+const v=e.target.closest("[data-v]");if(v)return go(v.dataset.v);
+const a=e.target.closest("[data-act]");if(!a||a.tagName==="SELECT")return;const id=a.dataset.id,act=a.dataset.act;
+if(act==="theme")return setTheme(S.theme==="dark"?"light":"dark");
+if(act==="read"){S.read.add(+id)}
+if(act==="markall"){NOTIFS.forEach(n=>S.read.add(n.id))}
+if(act==="filter"){S.filter=id}
+if(act==="more"){S.open.has(+id)?S.open.delete(+id):S.open.add(+id)}
+if(act==="subj")return openSubject(id);
+store.set("read",[...S.read]);render()});
+document.addEventListener("change",e=>{if(e.target.dataset.act==="sem"){S.sem=+e.target.value;render()}});
+function openSubject(c){const s=SUB(c),m=semRows(3).find(r=>r.c===c),t=total(m.m);$("#dlg").innerHTML=`<h2 id="dt">${s.n}</h2><p class="mu">${s.c} · ${s.cr} credits · Room ${s.room}</p><p style="margin:12px 0">${s.d}</p><p><b>Faculty:</b> ${s.f}</p><p><b>Attendance:</b> ${pct(...s.a)}% (${s.a[0]}/${s.a[1]})</p><p><b>Marks:</b> ${t}/100 · Grade ${grade(t)[0]}</p><p style="margin-top:10px"><b>Topics</b></p><p>${s.t.map(x=>`<span class="chip" style="margin:3px 4px 3px 0">${x}</span>`).join("")}</p><p style="margin:14px 0 5px"><b>Syllabus covered ${s.p}%</b></p><div class="bar"><i style="width:${s.p}%;background:${s.col}"></i></div><p style="text-align:right;margin-top:20px"><button class="btn" id="cl">Close</button></p>`;$("#dlg").showModal();$("#cl").onclick=()=>$("#dlg").close()}
+$("#dlg").addEventListener("click",e=>{if(e.target.id==="dlg")e.target.close()});
+
+/* Search across subjects, notifications, announcements */
+$("#q").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase(),box=$("#sr");if(!q){box.style.display="none";return}
+const r=[...SUBJECTS.filter(s=>(s.n+s.c+s.f).toLowerCase().includes(q)).map(s=>["subjects","📚",s.n,s.c]),...NOTIFS.filter(n=>(n.t+n.b).toLowerCase().includes(q)).map(n=>["notifications",ICON[n.y],n.t,"Notification"]),...ANNS.filter(a=>(a.t+a.s).toLowerCase().includes(q)).map(a=>["announcements","📢",a.t,"Announcement"])];
+box.innerHTML=r.length?r.slice(0,8).map(x=>`<button data-v="${x[0]}">${x[1]} ${x[2]} <small class="mu">· ${x[3]}</small></button>`).join(""):`<p class="empty">No results found. Try a subject name or keyword.</p>`;box.style.display="block"});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#sr").style.display="none"});
+
+/* ============ INIT ============ */
+$("#av").textContent=initials;$("#mn").textContent=STUDENT.name;
+setTheme(S.theme);
+const h=location.hash.slice(1);if(V[h])S.view=h;
+render();setInterval(tick,1000);
+</script>
+</body>
+</html>
